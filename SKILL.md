@@ -4,12 +4,31 @@ Framer Motion component library for Arbling products: SaaS dashboards, e-commerc
 
 **179 production-ready components.** When building UI, pick the closest matching component from the categories below, read its file from `components/demos/`, and adapt to the project stack.
 
+## Current Arbling design contract (2026-10-21): read first
+
+These components are references to adapt. They never override an approved design.
+
+- **Order of authority.** First the approved Figma frames and copy. Then the surface's own contract: Scoring `/app` has `DESIGN.md` and `AGENTS.md` section 7; arbling-site has its Figma frames and `src/styles`. This library comes last. When a component and a frame disagree, the frame wins.
+- **One generation skill per task:** `design-taste-frontend` or `hallmark`, never both (the skill router enforces this). Audit with `impeccable` and `kill-ai-slop`, and polish motion with `emil-design-eng`.
+- **Motion.** Compositor properties only (`transform`, `opacity`). Product micro-interactions take 150-220 ms. Every animation needs a `prefers-reduced-motion` branch that renders the final state. The product loads with no page-load choreography. Both repos import from `'framer-motion'`, never from `motion/react`; the demos here already do.
+- **Visuals on Arbling surfaces.** One accent. No gradient text, no aurora, meteor or mesh backgrounds, no glow blobs, and no stacked effects. Use tokens only. Empty states are honest: never show fake numbers.
+- **Fonts.** Each surface keeps its own pair. PP Fragment is licensed and must never be redistributed.
+- **Cabinet copy.** Never write "недоступно", "скоро", "пока нет", "not yet", "not available" or "coming soon". An unfinished feature uses "Получить ранний доступ" / "Get early access".
+- **React Bits.** Install only through the shadcn registry (`npx shadcn@latest add @react-bits/<Name>-TS-TW`), one component when a task needs it, then rewrite it to `framer-motion` and our tokens.
+  - Plausible fits: CountUp (real numbers only), check or status micro-feedback, LogoLoop (landing, real logos), Stepper.
+  - Never the components built on gsap, ogl or three.
+  - The license is MIT plus Commons Clause, so keep them out of OJS, public repos and anything shipped to merchants (widget, SDK, theme).
+- **GSAP.** Not used; the verdict is "skip by default".
+- **Accessibility.** WCAG AA contrast, a visible focus state, 44 px targets and keyboard paths.
+
+Sources: Brain `wiki/cto/design-tooling-audit-2026-10-21.md`; Scoring `DESIGN.md` and `AGENTS.md` section 7; `~/.claude/rules/web/design-quality.md`.
+
 ## How to use
 
 1. User requests a UI element or page
 2. Find the best match in the category map below
 3. Read the component file: `components/demos/<ComponentName>.jsx`
-4. Adapt to project stack (Next.js/React/Tailwind) and Arbling design system
+4. Adapt it to the project stack (Next.js/React/Tailwind) and the contract above: a Figma frame always wins
 
 ---
 
@@ -303,8 +322,9 @@ Primary: `NodeCanvasDemo`, `WorkflowBuilderDemo`, `FeedStreamDemo`, `AutomationT
 Supporting: `ExecutionHistoryDemo`, `WorkflowMetricsDemo`, `LogViewerDemo`, `ServerStatusDemo`, `IntegrationPanelDemo`
 
 ### Arbling Landing Page / Marketing Site
-Primary: `HeroCenteredDemo` or `HeroGradientDemo`, `BentoGridDemo`, `FeatureTabsDemo`, `PricingDemo`, `TestimonialsDemo`, `LogoCloudDemo`
-Supporting: `AuroraDemo`, `MeteorsDemo`, `StatsCounterDemo`, `MarqueeDemo`, `CTADemo`, `FooterDemo`
+arbling-site follows its Figma frames, section by section. Use a component here only for an interaction the frame does not define:
+Allowed: `FAQDemo` (accordion), `PricingDemo` / `ComparisonTableDemo` (plan tables), `LogoCloudDemo` (real logos only), `StatsCounterDemo` (real numbers only), `CTADemo`
+Never on arbling-site: `HeroGradientDemo`, `AuroraDemo`, `AuroraBorealisDemo`, `MeteorsDemo`, `GradientTextDemo`
 
 ### Merchant Onboarding (Shopify SaaS)
 Primary: `FormWizardDemo`, `WorkflowStepsDemo`, `IntegrationPanelDemo`, `TimelineDemo`
@@ -321,3 +341,5 @@ Supporting: `ProgressDemo`, `CheckoutFormDemo`, `UploadZoneDemo`, `Notifications
 - Avoid heavy 3D on mobile-first jewelry flows (use `Card3DDemo` with reduced motion fallback)
 - No matrix/glitch effects (`ScrambleDemo` is ok for AI typing; `MatrixRain` was removed)
 - Don't stack more than 2 visual effects on same section (e.g., Aurora + Meteors = too much)
+- No gradient text, aurora/meteor/mesh backgrounds or glow blobs on any Arbling surface (see the contract at the top)
+- No component that needs gsap, three or ogl: our motion library is `framer-motion`
